@@ -43,6 +43,7 @@ model User {
   name            String
   email           String        @unique
   avatarUrl       String?
+  googleId        String?        @unique
   createdAt       DateTime      @default(now())
   participatingAt Participant[]
   ownPools        Pool[]
