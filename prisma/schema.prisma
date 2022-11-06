@@ -15,23 +15,25 @@ datasource db {
 }
 
 model Pool {
-  id           String        @id @default(cuid())
-  title        String
-  code         String        @unique
-  createdAt    DateTime      @default(now())
-  owner        User?         @relation(fields: [ownerId], references: [id])
+  id        String   @id @default(cuid())
+  title     String
+  code      String   @unique
+  createdAt DateTime @default(now())
+  ownerId   String?
+
   participants Participant[]
-  ownerId      String?
+  owner        User?         @relation(fields: [ownerId], references: [id])
 }
 
 model Participant {
   id     String @id @default(cuid())
   userId String
+  poolId String
 
-  user    User    @relation(fields: [userId], references: [id])
   guesses Guess[]
-  pool    Pool    @relation(fields: [poolId], references: [id])
-  poolId  String
+
+  user User @relation(fields: [userId], references: [id])
+  pool Pool @relation(fields: [poolId], references: [id])
 
   @@unique([userId, poolId])
 }
