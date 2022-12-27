@@ -147,7 +147,7 @@ export const poolRoutes = async (
         id: z.string()
       });
       const { id } = getPoolParams.parse(request.params);
-      const pools = await prisma.pool.findUnique({
+      const pool = await prisma.pool.findFirst({
         where: {
           id
         },
@@ -176,7 +176,7 @@ export const poolRoutes = async (
           }
         }
       });
-      return { pools };
+      return { pool };
     }
   );
 };
