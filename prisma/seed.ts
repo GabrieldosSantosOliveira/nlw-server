@@ -1,15 +1,14 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import * as dayjs from 'dayjs';
-const futureDate = dayjs().add(7, 'day').toISOString();
+import DayJs from 'dayjs';
+const futureDate = DayJs().add(7, 'day').toISOString();
 const main = async () => {
   const user = await prisma.user.create({
     data: {
       name: 'John Doe',
       email: 'john.doe@gmail.com',
-      avatarUrl:
-        'https://github.com/GabrieldosSantosOliveira.png'
-    }
+      avatarUrl: 'https://github.com/GabrieldosSantosOliveira.png',
+    },
   });
   const pool = await prisma.pool.create({
     data: {
@@ -18,17 +17,17 @@ const main = async () => {
       ownerId: user.id,
       participants: {
         create: {
-          userId: user.id
-        }
-      }
-    }
+          userId: user.id,
+        },
+      },
+    },
   });
   await prisma.game.create({
     data: {
       date: futureDate,
       firstTeamCountryCode: 'DE',
-      secondTeamCountryCode: 'BR'
-    }
+      secondTeamCountryCode: 'BR',
+    },
   });
   await prisma.game.create({
     data: {
@@ -43,13 +42,13 @@ const main = async () => {
             connect: {
               userId_poolId: {
                 userId: user.id,
-                poolId: pool.id
-              }
-            }
-          }
-        }
-      }
-    }
+                poolId: pool.id,
+              },
+            },
+          },
+        },
+      },
+    },
   });
 };
 main();

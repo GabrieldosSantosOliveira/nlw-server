@@ -4,9 +4,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { authenticate } from '../plugins/authenticate';
 
-export const guessRoutes = async (
-  fastify: FastifyInstance
-) => {
+export const guessRoutes = async (fastify: FastifyInstance) => {
   fastify.get('/guesses/count', async () => {
     const count = await prisma.guess.count();
     return { count };
@@ -14,66 +12,61 @@ export const guessRoutes = async (
   fastify.post(
     '/pools/:poolId/games/:gameId/guesses',
     {
-      onRequest: [authenticate]
+      onRequest: [authenticate],
     },
     async (request, reply) => {
       const createGuessParams = z.object({
         poolId: z.string(),
-        gameId: z.string()
+        gameId: z.string(),
       });
       const createGuessBody = z.object({
         firstTeamPoints: z.number(),
-        secondTeamPoints: z.number()
+        secondTeamPoints: z.number(),
       });
-      const { poolId, gameId } = createGuessParams.parse(
-        request.params
+      const { poolId, gameId } = createGuessParams.parse(request.params);
+      const { firstTeamPoints, secondTeamPoints } = createGuessBody.parse(
+        request.body,
       );
-      const { firstTeamPoints, secondTeamPoints } =
-        createGuessBody.parse(request.body);
 
-      const participant =
-        await prisma.participant.findUnique({
-          where: {
-            userId_poolId: {
-              userId: request.user.sub,
-              poolId
-            }
-          }
-        });
+      const participant = await prisma.participant.findUnique({
+        where: {
+          userId_poolId: {
+            userId: request.user.sub,
+            poolId,
+          },
+        },
+      });
       if (!participant) {
         return reply.status(404).send({
-          message:
-            'You are not allowed to create a guess inside this post'
+          message: 'You are not allowed to create a guess inside this post',
         });
       }
       const guess = await prisma.guess.findUnique({
         where: {
           gameId_participantId: {
             gameId,
-            participantId: participant.id
-          }
-        }
+            participantId: participant.id,
+          },
+        },
       });
       if (guess) {
         return reply.status(400).send({
-          message:
-            'You already sent a guess to this game on this pool'
+          message: 'You already sent a guess to this game on this pool',
         });
       }
       const game = await prisma.game.findUnique({
         where: {
-          id: gameId
-        }
+          id: gameId,
+        },
       });
       if (!game) {
         return reply.status(404).send({
-          message: 'Game not found'
+          message: 'Game not found',
         });
       }
       if (game.date < new Date()) {
         return reply.status(400).send({
-          message:
-            'You cannot send guesses after the game date.'
+          message: 'You cannot send guesses after the game date.',
         });
       }
       await prisma.guess.create({
@@ -81,10 +74,10 @@ export const guessRoutes = async (
           firstTeamPoints,
           secondTeamPoints,
           participantId: participant.id,
-          gameId
-        }
+          gameId,
+        },
       });
       return reply.status(201).send();
-    }
+    },
   );
 };

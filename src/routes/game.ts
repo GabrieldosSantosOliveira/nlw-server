@@ -4,44 +4,39 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { authenticate } from '../plugins/authenticate';
 
-export const gameRoutes = async (
-  fastify: FastifyInstance
-) => {
+export const gameRoutes = async (fastify: FastifyInstance) => {
   fastify.get(
     '/pools/:id/games',
     { onRequest: [authenticate] },
-    async (request, reply) => {
+    async (request) => {
       const getPoolParams = z.object({
-        id: z.string()
+        id: z.string(),
       });
       const { id } = getPoolParams.parse(request.params);
       const games = await prisma.game.findMany({
         orderBy: {
-          date: 'desc'
+          date: 'desc',
         },
         include: {
           guesses: {
             where: {
               participant: {
                 userId: request.user.sub,
-                poolId: id
-              }
-            }
-          }
-        }
+                poolId: id,
+              },
+            },
+          },
+        },
       });
       return {
-        games: games.map(game => {
+        games: games.map((game) => {
           return {
             ...game,
-            guess:
-              game.guesses.length > 0
-                ? game.guesses[0]
-                : null,
-            guesses: undefined
+            guess: game.guesses.length > 0 ? game.guesses[0] : null,
+            guesses: undefined,
           };
-        })
+        }),
       };
-    }
+    },
   );
 };

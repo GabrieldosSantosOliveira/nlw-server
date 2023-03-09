@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "rimraf dist && tsc --build",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "format": "prettier -w ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Gabriel dos Santos Oliveira <gabrielsantosoliveira951@gmail.com>",
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
@@ -20,6 +22,7 @@
     "@typescript-eslint/parser": "^5.42.0",
     "eslint": "^8.26.0",
     "eslint-plugin-import-helpers": "^1.3.1",
+    "prettier": "^2.8.4",
     "prisma": "^4.5.0",
     "prisma-erd-generator": "^1.2.2",
     "rimraf": "^3.0.2",
