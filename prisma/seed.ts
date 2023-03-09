@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
-
 const prisma = new PrismaClient();
-
+import * as dayjs from 'dayjs';
+const futureDate = dayjs().add(7, 'day').toISOString();
 const main = async () => {
   const user = await prisma.user.create({
     data: {
@@ -25,14 +25,14 @@ const main = async () => {
   });
   await prisma.game.create({
     data: {
-      date: '2022-11-06T01:23:27.852Z',
+      date: futureDate,
       firstTeamCountryCode: 'DE',
       secondTeamCountryCode: 'BR'
     }
   });
   await prisma.game.create({
     data: {
-      date: '2022-11-06T01:23:27.852Z',
+      date: futureDate,
       firstTeamCountryCode: 'BR',
       secondTeamCountryCode: 'AR',
       guesses: {
