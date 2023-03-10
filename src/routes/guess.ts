@@ -5,14 +5,72 @@ import { prisma } from '../lib/prisma';
 import { authenticate } from '../plugins/authenticate';
 
 export const guessRoutes = async (fastify: FastifyInstance) => {
-  fastify.get('/guesses/count', async () => {
-    const count = await prisma.guess.count();
-    return { count };
-  });
+  fastify.get(
+    '/guesses/count',
+    {
+      schema: {
+        tags: ['guess'],
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              count: { type: 'number' },
+            },
+          },
+        },
+      },
+    },
+    async () => {
+      const count = await prisma.guess.count();
+      return { count };
+    },
+  );
   fastify.post(
     '/pools/:poolId/games/:gameId/guesses',
     {
       onRequest: [authenticate],
+      schema: {
+        tags: ['pool'],
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+        params: {
+          type: 'object',
+          properties: {
+            poolId: {
+              type: 'string',
+              description: 'id of poll',
+            },
+            gameId: {
+              type: 'string',
+              description: 'id of game',
+            },
+          },
+        },
+        response: {
+          201: {
+            type: 'null',
+            description: 'Success',
+          },
+          400: {
+            type: 'object',
+            description: 'You already sent a guess to this game on this pool',
+            properties: {
+              message: { type: 'string' },
+            },
+          },
+          404: {
+            type: 'object',
+            description:
+              'You are not allowed to create a guess inside this post',
+            properties: {
+              message: { type: 'string' },
+            },
+          },
+        },
+      },
     },
     async (request, reply) => {
       const createGuessParams = z.object({
