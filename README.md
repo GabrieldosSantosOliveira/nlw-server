@@ -4,7 +4,6 @@
  ## <p align="center"> NLW Server <a href="LICENSE"> <img  src="https://img.shields.io/static/v1?label=License&message=MIT&color=&labelColor=202024" alt="License"></a> </p>
  O Nlw Server é uma api desenvolvida durante a semana da nlw copa
  
-
 ## 🛠️ Tecnologias
 - [TypeScript](https://www.typescriptlang.org/) 
 - [Fastify](https://www.fastify.io/) 
@@ -13,10 +12,18 @@
 - [Prettier](https://prettier.io/)
 - [Prisma](https://www.prisma.io/)
 - [Jwt](https://jwt.io/)
+
 ## ✔️ Pré Requisitos
 - [Yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [Node.js](https://nodejs.org/en/)
+
+
+## 📃 Documentação
+
+- Acesse o endpoint /docs para acessar a página da api
+
+ <img src="https://user-images.githubusercontent.com/86084272/224433746-dc1d16b7-cb53-474c-af9e-9fdc82f8e9d0.jpeg"/>
 
 ## 🚀 Como executar
 
