@@ -15,7 +15,7 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@mermaid-js/mermaid-cli": "^9.1.7",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
